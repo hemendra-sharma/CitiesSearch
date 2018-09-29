@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'hemendra'
+            keyPassword 'hemendra'
+            storeFile file('E:/PersonalProjects/BackbaseAssignment/CitiesSearch/keystore.jks')
+            storePassword 'hemendra'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.hemendra.citiessearch"
@@ -15,13 +23,28 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            signingConfig signingConfigs.config
+        }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.0.0'
+    // just adding to prevent gradle errors
+    implementation 'com.android.support:animated-vector-drawable:28.0.0'
+    implementation 'com.android.support:support-media-compat:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    // Google Maps
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    // RecyclerView, and CardView for better performance, and UX
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    // test
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
