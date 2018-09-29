@@ -2,7 +2,6 @@ package com.hemendra.citiessearch.view;
 
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 import com.hemendra.citiessearch.R;
 import com.hemendra.citiessearch.data.City;
 import com.hemendra.citiessearch.presenter.listeners.ISearchPresenter;
+import com.hemendra.citiessearch.presenter.SearchPresenter;
 import com.hemendra.citiessearch.view.fragments.MapViewFragment;
 import com.hemendra.citiessearch.view.fragments.SearchFragment;
 import com.hemendra.citiessearch.view.listeners.OnCityClickListener;
@@ -31,7 +31,7 @@ public class CitiesActivity extends AppCompatActivity implements ICitiesActivity
     private RelativeLayout rlProgress;
     private TextView tvProgress;
 
-    private ISearchPresenter setupPresenter;
+    private ISearchPresenter setupPresenter = new SearchPresenter(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,20 +47,7 @@ public class CitiesActivity extends AppCompatActivity implements ICitiesActivity
         searchFragment.setOnCityClickListener(onCityClickListener);
         searchFragment.setSearchPresenter(setupPresenter);
 
-        onSetupComplete();
-        new Handler().postDelayed(this::fillDummyData, 1000);
-    }
-
-    private void fillDummyData() {
-        // assume that we got some search results, just to check UI functionality
-        // going to remove it later
-        ArrayList<City> cities = new ArrayList<>();
-        cities.add(new City("Alabama", "US", 0, 0));
-        cities.add(new City("Albuquerque", "US", 0, 0));
-        cities.add(new City("Anaheim", "US", 0, 0));
-        cities.add(new City("Arizona", "US", 0, 0));
-        cities.add(new City("Sydney", "US", 0, 0));
-        onSearchResults(cities);
+        setupPresenter.setupData();
     }
 
     @Override
