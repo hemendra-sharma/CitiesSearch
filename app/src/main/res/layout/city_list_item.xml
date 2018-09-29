@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:padding="5dp"
     android:layout_margin="5dp"
-    android:background="#eeeeee">
+    android:background="@drawable/rounded_corner_selector_grey">
 
     <TextView
         android:id="@+id/tvCityName"

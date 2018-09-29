@@ -34,6 +34,8 @@ public class DataLoader extends CustomAsyncTask<AssetManager, String, Trie> {
             publishProgress("Parsing Cities...");
             ArrayList<City> cities = CitiesJsonParser.parseJson(gzipInputStream);
 
+            gzipInputStream.close();
+
             publishProgress("Sorting Cities...");
             Collections.sort(cities, (city1, city2) ->
                     city1.displayName.compareTo(city2.displayName));

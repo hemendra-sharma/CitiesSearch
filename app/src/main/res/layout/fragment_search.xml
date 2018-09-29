@@ -26,7 +26,25 @@
             android:inputType="text"
             android:maxLength="50"
             android:padding="10dp"
-            android:background="@drawable/et_background"/>
+            android:background="@drawable/et_background"
+            android:paddingEnd="?android:actionBarSize"
+            android:paddingRight="?android:actionBarSize"/>
+
+        <TextView
+            android:id="@+id/tvCross"
+            android:layout_width="?android:actionBarSize"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/etSearch"
+            android:layout_alignBottom="@+id/etSearch"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="X"
+            android:gravity="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"/>
 
     </RelativeLayout>
 

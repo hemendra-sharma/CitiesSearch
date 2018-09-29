@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Cities Search</string>
-    <string name="title_activity_cities">Cities Search</string>
     <string name="type_to_search">Type to Search</string>
 </resources>
