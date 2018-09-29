@@ -30,11 +30,22 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tvInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0 results filtered in 0 seconds"
+        android:textSize="14sp"
+        android:gravity="center_vertical|end"
+        android:layout_below="@+id/rlSearch"
+        android:textColor="#515151"
+        android:visibility="gone"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rlSearch"
+        android:layout_below="@+id/tvInfo"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager">
 
     </android.support.v7.widget.RecyclerView>

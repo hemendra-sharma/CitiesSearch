@@ -1,5 +1,6 @@
 package com.hemendra.citiessearch.view.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +11,9 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.hemendra.citiessearch.R;
 import com.hemendra.citiessearch.data.City;
@@ -19,6 +22,7 @@ import com.hemendra.citiessearch.view.adapters.SearchResultsAdapter;
 import com.hemendra.citiessearch.view.listeners.OnCityClickListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class SearchFragment extends Fragment {
 
@@ -35,7 +39,10 @@ public class SearchFragment extends Fragment {
 
     private RecyclerView recycler = null;
     private EditText etSearch = null;
+    private TextView tvInfo = null;
     private SearchResultsAdapter adapter = null;
+
+    private long searchStartedAt = 0;
 
     @Nullable
     @Override
@@ -52,6 +59,7 @@ public class SearchFragment extends Fragment {
 
         recycler = view.findViewById(R.id.recycler);
         etSearch = view.findViewById(R.id.etSearch);
+        tvInfo = view.findViewById(R.id.tvInfo);
 
         etSearch.addTextChangedListener(textWatcher);
     }
@@ -64,6 +72,7 @@ public class SearchFragment extends Fragment {
 
         @Override
         public void afterTextChanged(Editable s) {
+            searchStartedAt = System.currentTimeMillis();
             if(searchPresenter != null)
                 searchPresenter.performSearch(etSearch.getText().toString().trim());
         }
@@ -71,10 +80,34 @@ public class SearchFragment extends Fragment {
 
     public void updateList(ArrayList<City> results) {
         if(adapter == null) {
-            adapter = new SearchResultsAdapter(results, onCityClickListener);
+            adapter = new SearchResultsAdapter(results,
+                    city -> {
+                        Context ctx = getContext();
+                        if(ctx != null) {
+                            InputMethodManager mgr = (InputMethodManager) ctx
+                                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+                            if(mgr != null) mgr
+                                    .hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
+                        }
+                        if(onCityClickListener != null) onCityClickListener.onCityClicked(city);
+                    });
             recycler.setAdapter(adapter);
         } else {
             adapter.setData(results);
+        }
+        setInfo();
+    }
+
+    private void setInfo() {
+        if(etSearch.getText().toString().trim().length() > 0) {
+            long milliseconds = System.currentTimeMillis() - searchStartedAt;
+            double seconds = (double) milliseconds / (double) 1000;
+            String info = String.format(Locale.getDefault(),
+                    "%d results filtered in %f seconds", adapter.getItemCount(), seconds);
+            tvInfo.setText(info);
+            tvInfo.setVisibility(View.VISIBLE);
+        } else {
+            tvInfo.setVisibility(View.GONE);
         }
     }
 

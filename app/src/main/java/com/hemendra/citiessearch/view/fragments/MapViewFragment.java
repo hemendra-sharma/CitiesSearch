@@ -16,6 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.hemendra.citiessearch.R;
 import com.hemendra.citiessearch.data.City;
+import com.hemendra.citiessearch.model.utils.CustomAsyncTask;
 
 public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
@@ -42,15 +43,31 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         if (mapFragment == null) {
-            mapFragment = SupportMapFragment.newInstance();
+            new LoadMapFragment().execute();
+        } else {
+            setupMapFragment();
         }
 
-        mapFragment.getMapAsync(this);
+        tvCityName = view.findViewById(R.id.tvCityName);
+    }
 
+    private class LoadMapFragment extends CustomAsyncTask<Void,Void,SupportMapFragment> {
+        @Override
+        protected SupportMapFragment doInBackground(Void... voids) {
+            return SupportMapFragment.newInstance();
+        }
+
+        @Override
+        protected void onPostExecute(SupportMapFragment supportMapFragment) {
+            mapFragment = supportMapFragment;
+            setupMapFragment();
+        }
+    }
+
+    private void setupMapFragment() {
+        mapFragment.getMapAsync(this);
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.map_container, mapFragment).commit();
-
-        tvCityName = view.findViewById(R.id.tvCityName);
     }
 
     @Override
