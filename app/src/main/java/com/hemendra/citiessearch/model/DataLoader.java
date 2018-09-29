@@ -1,7 +1,6 @@
 package com.hemendra.citiessearch.model;
 
 import android.content.res.AssetManager;
-import android.util.Log;
 
 import com.hemendra.citiessearch.data.City;
 import com.hemendra.citiessearch.model.listeners.DataLoaderListener;
@@ -56,8 +55,9 @@ public class DataLoader extends CustomAsyncTask<AssetManager, String, Trie> {
                 }
             }
 
-            if(!isCancelled())
+            if(!isCancelled()) {
                 return trie;
+            }
         } catch (IOException ex) {
             ex.printStackTrace();
             reason = "Failed to Read JSON File";

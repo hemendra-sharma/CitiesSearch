@@ -1,7 +1,5 @@
 package com.hemendra.citiessearch.model;
 
-import com.hemendra.citiessearch.data.City;
-
 import java.util.HashMap;
 
 public class TrieNode {

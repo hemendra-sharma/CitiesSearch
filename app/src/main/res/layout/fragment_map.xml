@@ -13,7 +13,7 @@
         android:padding="10dp"
         android:background="#5288b4"
         android:textColor="#ffffff"
-        android:text="City Name"
+        android:text=" "
         android:gravity="center"
         android:textSize="18sp"/>
 

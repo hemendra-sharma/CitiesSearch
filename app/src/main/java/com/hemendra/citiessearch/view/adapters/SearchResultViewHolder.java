@@ -31,7 +31,7 @@ public class SearchResultViewHolder extends RecyclerView.ViewHolder {
         this.city = city;
         tvCityName.setText(city.displayName);
         tvLatLong.setText(String.format(Locale.getDefault(),
-                "%.4f, %.4f", city.latitude, city.longitude));
+                "Location: %.4f, %.4f", city.latitude, city.longitude));
     }
 
 }
