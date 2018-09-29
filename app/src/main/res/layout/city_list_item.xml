@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:layout_margin="5dp"
+    android:background="#eeeeee">
+
+    <TextView
+        android:id="@+id/tvCityName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="City Name"
+        android:textSize="18sp"
+        android:gravity="center_vertical|start"
+        android:textColor="#000000"/>
+
+    <TextView
+        android:id="@+id/tvLatLong"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="xx.xxxxxx, xx.xxxxxx"
+        android:textSize="14sp"
+        android:gravity="center_vertical|end"
+        android:textColor="#515151"/>
+
+</LinearLayout>
