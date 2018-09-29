@@ -29,7 +29,7 @@ public class TrieTest {
     }
 
     @Test
-    public void searchTest1() {
+    public void searchTestValidInput_1() {
         ArrayList<City> cities = new ArrayList<>();
         cities.add(new City("Alabama", "US", 0, 0));
         cities.add(new City("Albuquerque", "US", 0, 0));
@@ -56,7 +56,7 @@ public class TrieTest {
     }
 
     @Test
-    public void searchTest2() {
+    public void searchTestValidInput_2() {
         ArrayList<City> cities = new ArrayList<>();
         cities.add(new City("Alabama", "US", 0, 0));
         cities.add(new City("Albuquerque", "US", 0, 0));
@@ -81,7 +81,7 @@ public class TrieTest {
     }
 
     @Test
-    public void searchTest3() {
+    public void searchTestValidInput_3() {
         ArrayList<City> cities = new ArrayList<>();
         cities.add(new City("Alabama", "US", 0, 0));
         cities.add(new City("Albuquerque", "US", 0, 0));
@@ -105,7 +105,7 @@ public class TrieTest {
     }
 
     @Test
-    public void searchTest4() {
+    public void searchTestInvalidInput() {
         ArrayList<City> cities = new ArrayList<>();
         cities.add(new City("Alabama", "US", 0, 0));
         cities.add(new City("Albuquerque", "US", 0, 0));
@@ -121,6 +121,39 @@ public class TrieTest {
 
         // no result should come
         assertEquals(0, results.size());
+
+        trie.destroy();
+    }
+
+    @Test
+    public void caseSensitivityTest() {
+        ArrayList<City> cities = new ArrayList<>();
+        cities.add(new City("Alabama", "US", 0, 0));
+        cities.add(new City("Albuquerque", "US", 0, 0));
+        cities.add(new City("Anaheim", "US", 0, 0));
+        cities.add(new City("Arizona", "US", 0, 0));
+        cities.add(new City("Sydney", "US", 0, 0));
+        Trie trie = Trie.getInstance(cities);
+        for(int i=0; i<cities.size(); i++)
+            trie.insert(cities.get(i), i);
+
+        // search for "Alb"
+        ArrayList<City> results = trie.search("Alb");
+
+        // all cities which starts with "Alb" should appear
+        assertEquals(1, results.size());
+
+        // and it should be sorted correctly
+        assertEquals(results.get(0).displayName, "Albuquerque, US");
+
+        // search for "aLb"
+        results = trie.search("aLb");
+
+        // all cities which starts with "aLb" should appear
+        assertEquals(1, results.size());
+
+        // and it should be sorted correctly
+        assertEquals(results.get(0).displayName, "Albuquerque, US");
 
         trie.destroy();
     }
