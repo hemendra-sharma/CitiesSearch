@@ -1,5 +1,7 @@
 package com.hemendra.citiessearch.model.structures;
 
+import android.util.Log;
+
 import com.hemendra.citiessearch.data.City;
 import com.hemendra.citiessearch.model.listeners.PrefixSearchStructure;
 
@@ -153,6 +155,7 @@ public class Radix extends PrefixSearchStructure {
                 return new ArrayList<>(); // tree end reached.
 
             StringBuilder label = node.labels.get(ascii);
+            Log.d("label", "=> "+label.toString()+" ("+label.length()+")");
 
             int j = 0;
             while (i < length && j < label.length()) {
@@ -166,9 +169,12 @@ public class Radix extends PrefixSearchStructure {
 
             if (i <= length) {
                 node = node.children.get(ascii); // traverse further
-            } else if(node.cityIndex >= 0){
+            } else if(node.cityIndex >= 0) {
                 extraCity = cities.get(node.cityIndex);
             }
+
+            if(i < length && node.labels.get((int) word.charAt(i)) == null)
+                return new ArrayList<>(); // no match for the next character
         }
 
         ArrayList<City> filteredCities = getAllCitiesBelowNode(node);

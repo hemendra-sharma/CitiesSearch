@@ -28,22 +28,25 @@ class DataLoader extends CustomAsyncTask<AssetManager, String, PrefixSearchStruc
     @Override
     protected PrefixSearchStructure doInBackground(AssetManager... params) {
         publishProgress("Opening JSON...");
+        reason = "Failed to open the JSON file.";
         AssetManager assetManager = params[0];
         try (InputStream stream = assetManager.open("cities")) {
 
             // decompress gzip file
             GZIPInputStream gzipInputStream = new GZIPInputStream(stream);
 
+            reason = "Failed to parse cities.";
             publishProgress("Parsing Cities...");
             ArrayList<City> cities = CitiesJsonParser.parseJson(gzipInputStream);
 
             gzipInputStream.close();
 
+            reason = "Failed to sort cities.";
             publishProgress("Sorting Cities...");
             Collections.sort(cities, (city1, city2) ->
                     city1.displayName.compareTo(city2.displayName));
-            publishProgress("Sorting Complete");
 
+            reason = "Failed to build data structure.";
             PrefixSearchStructure trie = PrefixSearchStructureFactory
                     .getStructure(StructureType.RADIX, cities);
 
@@ -64,6 +67,7 @@ class DataLoader extends CustomAsyncTask<AssetManager, String, PrefixSearchStruc
             if(!isCancelled()) {
                 return trie;
             }
+            reason = "Aborted";
         } catch (IOException ex) {
             ex.printStackTrace();
             reason = "Failed to Read JSON File";

@@ -36,7 +36,7 @@ public class CitiesActivity extends AppCompatActivity implements ICitiesActivity
     @VisibleForTesting
     protected IPresenterFactory presenterFactory = new PresenterFactory(this);
 
-    private ISearchPresenter setupPresenter = presenterFactory.getSearchPresenter();
+    private ISearchPresenter searchPresenter = presenterFactory.getSearchPresenter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +50,9 @@ public class CitiesActivity extends AppCompatActivity implements ICitiesActivity
         mapViewFragment = new MapViewFragment();
 
         searchFragment.setOnCityClickListener(onCityClickListener);
-        searchFragment.setSearchPresenter(setupPresenter);
+        searchFragment.setSearchPresenter(searchPresenter);
 
-        setupPresenter.setupData();
+        searchPresenter.setupData();
     }
 
     @Override
@@ -99,6 +99,10 @@ public class CitiesActivity extends AppCompatActivity implements ICitiesActivity
         transaction.commitAllowingStateLoss();
     }
 
+    /**
+     * Shows the map fragment focusing a particular city.
+     * @param city The city to focus.
+     */
     private void showMapFragment(City city) {
         mapViewFragment.setCityToFocus(city);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -107,6 +111,10 @@ public class CitiesActivity extends AppCompatActivity implements ICitiesActivity
         transaction.commitAllowingStateLoss();
     }
 
+    /**
+     * Get the tag string of the fragment which is currently showing on top.
+     * @return Tag string value.
+     */
     private String currentFragmentTag() {
         if(getSupportFragmentManager().getBackStackEntryCount() == 0) return "";
 
@@ -118,6 +126,7 @@ public class CitiesActivity extends AppCompatActivity implements ICitiesActivity
     @Override
     public void onBackPressed() {
         if(currentFragmentTag().equals(MAP_FRAGMENT_TAG)) {
+            // it is showing map currently
             getSupportFragmentManager().popBackStackImmediate();
         } else {
             finish();
@@ -126,7 +135,8 @@ public class CitiesActivity extends AppCompatActivity implements ICitiesActivity
 
     @Override
     protected void onDestroy() {
-        setupPresenter.destroy();
+        // abort any ongoing process and release memory
+        searchPresenter.destroy();
         super.onDestroy();
     }
 }

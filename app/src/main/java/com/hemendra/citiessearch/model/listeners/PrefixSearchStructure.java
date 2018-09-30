@@ -4,6 +4,9 @@ import com.hemendra.citiessearch.data.City;
 
 import java.util.ArrayList;
 
+/**
+ * Provides abstraction for actual data structures i.e. Trie, and Radix
+ */
 public abstract class PrefixSearchStructure {
 
     // we are going to hold the reference to the cities in a separate array to reduce
@@ -32,5 +35,8 @@ public abstract class PrefixSearchStructure {
      */
     public abstract ArrayList<City> search(String key);
 
+    /**
+     * Destroy the structure instance to free up the memory.
+     */
     public abstract void destroy();
 }
