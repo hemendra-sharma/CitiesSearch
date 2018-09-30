@@ -4,6 +4,9 @@ import android.content.res.AssetManager;
 
 import com.hemendra.citiessearch.data.City;
 import com.hemendra.citiessearch.model.listeners.DataLoaderListener;
+import com.hemendra.citiessearch.model.listeners.PrefixSearchStructure;
+import com.hemendra.citiessearch.model.structures.PrefixSearchStructureFactory;
+import com.hemendra.citiessearch.model.structures.StructureType;
 import com.hemendra.citiessearch.model.utils.CustomAsyncTask;
 
 import java.io.IOException;
@@ -13,17 +16,17 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.zip.GZIPInputStream;
 
-public class DataLoader extends CustomAsyncTask<AssetManager, String, Trie> {
+class DataLoader extends CustomAsyncTask<AssetManager, String, PrefixSearchStructure> {
 
     private String reason = "Unknown";
     private DataLoaderListener listener;
 
-    public DataLoader(DataLoaderListener listener) {
+    DataLoader(DataLoaderListener listener) {
         this.listener = listener;
     }
 
     @Override
-    protected Trie doInBackground(AssetManager... params) {
+    protected PrefixSearchStructure doInBackground(AssetManager... params) {
         publishProgress("Opening JSON...");
         AssetManager assetManager = params[0];
         try (InputStream stream = assetManager.open("cities")) {
@@ -41,7 +44,8 @@ public class DataLoader extends CustomAsyncTask<AssetManager, String, Trie> {
                     city1.displayName.compareTo(city2.displayName));
             publishProgress("Sorting Complete");
 
-            Trie trie = Trie.getInstance(cities);
+            PrefixSearchStructure trie = PrefixSearchStructureFactory
+                    .getStructure(StructureType.RADIX, cities);
 
             long lastProgressPostedAt = 0;
             for(int i=0; i<cities.size() && !isCancelled(); i++) {
@@ -76,8 +80,8 @@ public class DataLoader extends CustomAsyncTask<AssetManager, String, Trie> {
     }
 
     @Override
-    protected void onPostExecute(Trie trie) {
-        if(trie != null) listener.onDataLoaded(trie);
+    protected void onPostExecute(PrefixSearchStructure structure) {
+        if(structure != null) listener.onDataLoaded(structure);
         else listener.onDataLoadingFailed(reason);
     }
 }

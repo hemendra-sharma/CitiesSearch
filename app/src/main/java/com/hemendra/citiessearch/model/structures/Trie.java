@@ -1,6 +1,7 @@
-package com.hemendra.citiessearch.model;
+package com.hemendra.citiessearch.model.structures;
 
 import com.hemendra.citiessearch.data.City;
+import com.hemendra.citiessearch.model.listeners.PrefixSearchStructure;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,40 +13,25 @@ import java.util.Collections;
  *
  * Using Trie, we can search the key in O(M) time; where M is maximum string length.
  *
- * If any list of words is {their, there, answer, any, bye}
- * then its Trie structure would look like this:
- *
- *                        root
- *                     /    |      \
- *                     t    a       b
- *                     |    |       |
- *                     h    n       y
- *                     |    |  \    |
- *                     e    s   y   e
- *                  /  |    |
- *                  i  r    w
- *                  |  |    |
- *                  r  e    e
- *                          |
- *                          r
- *
  * We are going to use Singleton pattern because we want only 1 instance of this
  * class to be created ever.
+ *
+ * LATE NOTE:
+ *
+ * I found that, although Trie is really fast for searching, it uses a lot of space.
+ * The used RAM gets bigger where there is too much variation in data and the data-set is huge.
+ *
+ * So, I decided to use Radix instead of Trie. I know that Radix is (a bit) slower than Trie,
+ * but this slowness cannot be noticed visually.
+ *
  */
-public class Trie {
+public class Trie extends PrefixSearchStructure {
 
     // a root node which can contain several children and it does not belong to any city
     private TrieNode root = new TrieNode();
 
-    // we are going to hold the reference to the cities in a separate array to reduce
-    // space usage and duplicate object creation.
-    private ArrayList<City> cities;
-
-    // store the time complexity for last search operation
-    private long lastSearchTimeComplexity = 0;
-
     private Trie(ArrayList<City> cities) {
-        this.cities = cities;
+        super(cities);
     }
 
     private static Trie instance = null;
@@ -54,12 +40,7 @@ public class Trie {
         return instance;
     }
 
-    /**
-     * Insert the city name into the tree.
-     *
-     * @param city The city to be added to structure
-     * @param index index of the actual city object in the "cities" array
-     */
+    @Override
     public void insert(City city, int index) {
         String displayName = city.displayName.toLowerCase();
         int length = displayName.length();
@@ -78,17 +59,8 @@ public class Trie {
         node.cityIndex = index;
     }
 
-    /**
-     * Search and returns a list of matching cities sorted alphabetically.
-     *
-     * @param key The keyword to search
-     * @return If 'key' is empty, then it will return the complete 'cities' array. Else, it
-     * will search crawl through the tree to find the best matching node (deepest node)
-     * and then it will build the array of cities below that node.
-     */
+    @Override
     public ArrayList<City> search(String key) {
-        lastSearchTimeComplexity = 0;
-
         int length = key.length();
         if(length == 0)
             return cities; // return all cities if searched with empty string
@@ -108,10 +80,10 @@ public class Trie {
             node = node.children.get(ascii);
         }
 
-        lastSearchTimeComplexity = level;
-
         // tree end not reached, which means there is some data under this node
         ArrayList<City> filteredCities = getAllCitiesBelowNode(node);
+        if(node.cityIndex >= 0) filteredCities.add(cities.get(node.cityIndex));
+
         Collections.sort(filteredCities, (city1, city2) ->
                 city1.displayName.compareTo(city2.displayName));
         return filteredCities;
@@ -126,7 +98,6 @@ public class Trie {
         ArrayList<City> filteredCities = new ArrayList<>();
         if(node != null) {
             for (TrieNode n : node.children.values()) {
-                lastSearchTimeComplexity++;
                 if (n.cityIndex >= 0) {
                     filteredCities.add(cities.get(n.cityIndex));
                 }
@@ -136,13 +107,10 @@ public class Trie {
         return filteredCities;
     }
 
-    public long getLastSearchTimeComplexity() {
-        return lastSearchTimeComplexity;
-    }
-
     /**
      * Set the instance to null. This should be called when user exits the app.
      */
+    @Override
     public void destroy() {
         instance = null;
     }

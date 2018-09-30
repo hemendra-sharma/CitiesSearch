@@ -1,19 +1,19 @@
 package com.hemendra.citiessearch.presenter;
 
 import com.hemendra.citiessearch.data.City;
-import com.hemendra.citiessearch.model.DataSource;
+import com.hemendra.citiessearch.model.DataSourceFactory;
 import com.hemendra.citiessearch.model.listeners.IDataSource;
 import com.hemendra.citiessearch.presenter.listeners.ISearchPresenter;
 import com.hemendra.citiessearch.view.listeners.ICitiesActivity;
 
 import java.util.ArrayList;
 
-public class SearchPresenter implements ISearchPresenter {
+class SearchPresenter implements ISearchPresenter {
 
     private ICitiesActivity ICitiesActivity;
-    private IDataSource dataSource = new DataSource(this);
+    private IDataSource dataSource = new DataSourceFactory(this).getDataSource();
 
-    public SearchPresenter(ICitiesActivity ICitiesActivity) {
+    SearchPresenter(ICitiesActivity ICitiesActivity) {
         this.ICitiesActivity = ICitiesActivity;
     }
 

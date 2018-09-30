@@ -6,18 +6,19 @@ import com.hemendra.citiessearch.data.City;
 import com.hemendra.citiessearch.model.listeners.DataLoaderListener;
 import com.hemendra.citiessearch.model.listeners.DataSearcherListener;
 import com.hemendra.citiessearch.model.listeners.IDataSource;
+import com.hemendra.citiessearch.model.listeners.PrefixSearchStructure;
 import com.hemendra.citiessearch.presenter.listeners.ISearchPresenter;
 
 import java.util.ArrayList;
 
-public class DataSource implements IDataSource, DataLoaderListener, DataSearcherListener {
+class DataSource implements IDataSource, DataLoaderListener, DataSearcherListener {
 
     private ISearchPresenter searchPresenter;
     private DataLoader loader = null;
     private DataSearcher searcher = null;
-    private Trie trie = null;
+    private PrefixSearchStructure structure = null;
 
-    public DataSource(ISearchPresenter searchPresenter) {
+    DataSource(ISearchPresenter searchPresenter) {
         this.searchPresenter = searchPresenter;
     }
 
@@ -39,7 +40,7 @@ public class DataSource implements IDataSource, DataLoaderListener, DataSearcher
 
         if(searcher != null && searcher.isExecuting()) searcher.cancel(true);
 
-        searcher = new DataSearcher(trie, this);
+        searcher = new DataSearcher(structure, this);
         searcher.execute(key);
     }
 
@@ -58,10 +59,10 @@ public class DataSource implements IDataSource, DataLoaderListener, DataSearcher
     }
 
     @Override
-    public void onDataLoaded(Trie trie) {
+    public void onDataLoaded(PrefixSearchStructure trie) {
         if(searchPresenter == null) return;
 
-        this.trie = trie;
+        this.structure = trie;
         searchPresenter.onLoadingComplete();
     }
 
@@ -76,8 +77,8 @@ public class DataSource implements IDataSource, DataLoaderListener, DataSearcher
     public void destroy() {
         searchPresenter = null;
 
-        if(trie != null) trie.destroy();
-        trie = null;
+        if(structure != null) structure.destroy();
+        structure = null;
 
         if(loader != null) loader.cancel(true);
         loader = null;

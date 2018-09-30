@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Cities Search</string>
     <string name="type_to_search">Type to Search</string>
+    <string name="please_wait">Please Wait</string>
 </resources>

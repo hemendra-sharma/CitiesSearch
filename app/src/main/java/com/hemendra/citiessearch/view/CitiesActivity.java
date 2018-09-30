@@ -2,6 +2,7 @@ package com.hemendra.citiessearch.view;
 
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -11,8 +12,9 @@ import android.widget.TextView;
 
 import com.hemendra.citiessearch.R;
 import com.hemendra.citiessearch.data.City;
+import com.hemendra.citiessearch.presenter.PresenterFactory;
+import com.hemendra.citiessearch.presenter.listeners.IPresenterFactory;
 import com.hemendra.citiessearch.presenter.listeners.ISearchPresenter;
-import com.hemendra.citiessearch.presenter.SearchPresenter;
 import com.hemendra.citiessearch.view.fragments.MapViewFragment;
 import com.hemendra.citiessearch.view.fragments.SearchFragment;
 import com.hemendra.citiessearch.view.listeners.OnCityClickListener;
@@ -22,16 +24,19 @@ import java.util.ArrayList;
 
 public class CitiesActivity extends AppCompatActivity implements ICitiesActivity {
 
-    private final String SEARCH_FRAGMENT_TAG = "search";
+    private static final String SEARCH_FRAGMENT_TAG = "search";
     private SearchFragment searchFragment = null;
 
-    private final String MAP_FRAGMENT_TAG = "map";
+    private static final String MAP_FRAGMENT_TAG = "map";
     private MapViewFragment mapViewFragment = null;
 
     private RelativeLayout rlProgress;
     private TextView tvProgress;
 
-    private ISearchPresenter setupPresenter = new SearchPresenter(this);
+    @VisibleForTesting
+    protected IPresenterFactory presenterFactory = new PresenterFactory(this);
+
+    private ISearchPresenter setupPresenter = presenterFactory.getSearchPresenter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +58,7 @@ public class CitiesActivity extends AppCompatActivity implements ICitiesActivity
     @Override
     public void onSetupStarted() {
         rlProgress.setVisibility(View.VISIBLE);
-        tvProgress.setText("Please Wait");
+        tvProgress.setText(R.string.please_wait);
     }
 
     @Override

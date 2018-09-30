@@ -1,4 +1,4 @@
-package com.hemendra.citiessearch.model;
+package com.hemendra.citiessearch.model.structures;
 
 import com.hemendra.citiessearch.data.City;
 
@@ -7,25 +7,25 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class TrieTest {
+public class RadixTest {
 
     @Test
     public void emptySearchTest() {
         ArrayList<City> cities = new ArrayList<>();
         cities.add(new City("Denver,", "US", 0, 0));
         cities.add(new City("Sydney,", "Australia", 0, 0));
-        Trie trie = Trie.getInstance(cities);
+        Radix radix = Radix.getInstance(cities);
         for(int i=0; i<cities.size(); i++)
-            trie.insert(cities.get(i), i);
+            radix.insert(cities.get(i), i);
 
-        ArrayList<City> results = trie.search("");
+        ArrayList<City> results = radix.search("");
 
         // should return all the results
         assertEquals(2, results.size());
 
-        trie.destroy();
+        radix.destroy();
     }
 
     @Test
@@ -36,12 +36,12 @@ public class TrieTest {
         cities.add(new City("Anaheim", "US", 0, 0));
         cities.add(new City("Arizona", "US", 0, 0));
         cities.add(new City("Sydney", "US", 0, 0));
-        Trie trie = Trie.getInstance(cities);
+        Radix radix = Radix.getInstance(cities);
         for(int i=0; i<cities.size(); i++)
-            trie.insert(cities.get(i), i);
+            radix.insert(cities.get(i), i);
 
         // search for "A"
-        ArrayList<City> results = trie.search("A");
+        ArrayList<City> results = radix.search("A");
 
         // all cities but Sydney should appear
         assertEquals(4, results.size());
@@ -52,7 +52,7 @@ public class TrieTest {
         assertEquals("Anaheim, US",     results.get(2).displayName);
         assertEquals("Arizona, US",     results.get(3).displayName);
 
-        trie.destroy();
+        radix.destroy();
     }
 
     @Test
@@ -63,12 +63,12 @@ public class TrieTest {
         cities.add(new City("Anaheim", "US", 0, 0));
         cities.add(new City("Arizona", "US", 0, 0));
         cities.add(new City("Sydney", "US", 0, 0));
-        Trie trie = Trie.getInstance(cities);
+        Radix radix = Radix.getInstance(cities);
         for(int i=0; i<cities.size(); i++)
-            trie.insert(cities.get(i), i);
+            radix.insert(cities.get(i), i);
 
         // search for "Al"
-        ArrayList<City> results = trie.search("Al");
+        ArrayList<City> results = radix.search("Al");
 
         // all cities which starts with "Al" should appear
         assertEquals(2, results.size());
@@ -77,7 +77,7 @@ public class TrieTest {
         assertEquals("Alabama, US",     results.get(0).displayName);
         assertEquals("Albuquerque, US", results.get(1).displayName);
 
-        trie.destroy();
+        radix.destroy();
     }
 
     @Test
@@ -88,12 +88,12 @@ public class TrieTest {
         cities.add(new City("Anaheim", "US", 0, 0));
         cities.add(new City("Arizona", "US", 0, 0));
         cities.add(new City("Sydney", "US", 0, 0));
-        Trie trie = Trie.getInstance(cities);
+        Radix radix = Radix.getInstance(cities);
         for(int i=0; i<cities.size(); i++)
-            trie.insert(cities.get(i), i);
+            radix.insert(cities.get(i), i);
 
         // search for "Alb"
-        ArrayList<City> results = trie.search("Alb");
+        ArrayList<City> results = radix.search("Alb");
 
         // all cities which starts with "Alb" should appear
         assertEquals(1, results.size());
@@ -101,7 +101,7 @@ public class TrieTest {
         // and it should be sorted correctly
         assertEquals(results.get(0).displayName, "Albuquerque, US");
 
-        trie.destroy();
+        radix.destroy();
     }
 
     @Test
@@ -112,17 +112,38 @@ public class TrieTest {
         cities.add(new City("Anaheim", "US", 0, 0));
         cities.add(new City("Arizona", "US", 0, 0));
         cities.add(new City("Sydney", "US", 0, 0));
-        Trie trie = Trie.getInstance(cities);
+        Radix radix = Radix.getInstance(cities);
         for(int i=0; i<cities.size(); i++)
-            trie.insert(cities.get(i), i);
+            radix.insert(cities.get(i), i);
 
         // search for "New"
-        ArrayList<City> results = trie.search("New");
+        ArrayList<City> results = radix.search("New");
 
         // no result should come
         assertEquals(0, results.size());
 
-        trie.destroy();
+        radix.destroy();
+    }
+
+    @Test
+    public void searchTestFullMatch() {
+        ArrayList<City> cities = new ArrayList<>();
+        cities.add(new City("Alabama", "US", 0, 0));
+        cities.add(new City("Albuquerque", "US", 0, 0));
+        cities.add(new City("Anaheim", "US", 0, 0));
+        cities.add(new City("Arizona", "US", 0, 0));
+        cities.add(new City("Sydney", "US", 0, 0));
+        Radix radix = Radix.getInstance(cities);
+        for(int i=0; i<cities.size(); i++)
+            radix.insert(cities.get(i), i);
+
+        // search for "Alabama, US"
+        ArrayList<City> results = radix.search("Alabama, US");
+
+        // no result should come
+        assertEquals(1, results.size());
+
+        radix.destroy();
     }
 
     @Test
@@ -133,12 +154,12 @@ public class TrieTest {
         cities.add(new City("Anaheim", "US", 0, 0));
         cities.add(new City("Arizona", "US", 0, 0));
         cities.add(new City("Sydney", "US", 0, 0));
-        Trie trie = Trie.getInstance(cities);
+        Radix radix = Radix.getInstance(cities);
         for(int i=0; i<cities.size(); i++)
-            trie.insert(cities.get(i), i);
+            radix.insert(cities.get(i), i);
 
         // search for "Alb"
-        ArrayList<City> results = trie.search("Alb");
+        ArrayList<City> results = radix.search("Alb");
 
         // all cities which starts with "Alb" should appear
         assertEquals(1, results.size());
@@ -147,7 +168,7 @@ public class TrieTest {
         assertEquals(results.get(0).displayName, "Albuquerque, US");
 
         // search for "aLb"
-        results = trie.search("aLb");
+        results = radix.search("aLb");
 
         // all cities which starts with "aLb" should appear
         assertEquals(1, results.size());
@@ -155,7 +176,7 @@ public class TrieTest {
         // and it should be sorted correctly
         assertEquals(results.get(0).displayName, "Albuquerque, US");
 
-        trie.destroy();
+        radix.destroy();
     }
 
     @Test
@@ -164,18 +185,18 @@ public class TrieTest {
         cities.add(new City("Alabama", "US", 0, 0));
         cities.add(new City("Alabama", "US", 0, 0));
         cities.add(new City("Alabama", "US", 0, 0));
-        Trie trie = Trie.getInstance(cities);
+        Radix radix = Radix.getInstance(cities);
         for(int i=0; i<cities.size(); i++)
-            trie.insert(cities.get(i), i);
+            radix.insert(cities.get(i), i);
 
         // search for "Al"
-        ArrayList<City> results = trie.search("Al");
+        ArrayList<City> results = radix.search("Al");
 
-        // Trie should eliminate the duplicates automatically
+        // Radix should eliminate the duplicates automatically
         // and it should return only 1 result
         assertEquals(1, results.size());
 
-        trie.destroy();
+        radix.destroy();
     }
 
     @Test
@@ -185,13 +206,13 @@ public class TrieTest {
         for(int i=0; i<10000; i++)
             cities.add(new City(randomString(20), randomString(2), 0, 0));
 
-        System.out.println("Setting Up Trie...");
+        System.out.println("Setting Up Radix...");
         long start = System.currentTimeMillis();
-        Trie trie = Trie.getInstance(cities);
+        Radix radix = Radix.getInstance(cities);
         for(int i=0; i<cities.size(); i++)
-            trie.insert(cities.get(i), i);
+            radix.insert(cities.get(i), i);
         long diff = System.currentTimeMillis() - start;
-        System.out.println("Time taken to setup trie: "+diff+" ms");
+        System.out.println("Time taken to setup radix: "+diff+" ms");
 
         System.out.println("testing...");
         int N = 1 + new Random().nextInt(10);
@@ -200,14 +221,12 @@ public class TrieTest {
 
         // search for 'key'
         start = System.currentTimeMillis();
-        ArrayList<City> results = trie.search(key);
+        ArrayList<City> results = radix.search(key);
         System.out.println("Found: " + results.size() + " results");
         diff = System.currentTimeMillis() - start;
         System.out.println("Time taken to perform search: "+diff+" ms");
 
-        System.out.println("Time Complexity: "+trie.getLastSearchTimeComplexity());
-
-        trie.destroy();
+        radix.destroy();
     }
 
     private String randomString(int length) {
@@ -218,31 +237,4 @@ public class TrieTest {
         return sb.toString();
     }
 
-    @Test
-    public void timeComplexityTest() {
-        ArrayList<City> cities = new ArrayList<>();
-        cities.add(new City("Alabama", "US", 0, 0));
-        cities.add(new City("Albuquerque", "US", 0, 0));
-        cities.add(new City("Anaheim", "US", 0, 0));
-        cities.add(new City("Arizona", "US", 0, 0));
-        cities.add(new City("Sydney", "US", 0, 0));
-        Trie trie = Trie.getInstance(cities);
-        for(int i=0; i<cities.size(); i++)
-            trie.insert(cities.get(i), i);
-
-        String searchKeyword = "Albuquerque";
-
-        // search for 'Albuquerque'
-        ArrayList<City> results = trie.search(searchKeyword);
-        System.out.println("Found: " + results.size() + " results");
-
-        System.out.println("Time Complexity: "+trie.getLastSearchTimeComplexity());
-
-        long N = searchKeyword.length();
-
-        // time complexity should be smaller than N * log(N)
-        assertTrue(trie.getLastSearchTimeComplexity() <= N * Math.log(N));
-
-        trie.destroy();
-    }
 }
