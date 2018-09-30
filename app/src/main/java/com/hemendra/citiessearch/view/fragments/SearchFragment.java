@@ -134,7 +134,7 @@ public class SearchFragment extends Fragment {
             long milliseconds = System.currentTimeMillis() - searchStartedAt;
             double seconds = (double) milliseconds / (double) 1000;
             String info = String.format(Locale.getDefault(),
-                    "%d results filtered in %f seconds", adapter.getItemCount(), seconds);
+                    "%d results filtered in %.3f seconds", adapter.getItemCount(), seconds);
             tvInfo.setText(info);
             tvInfo.setVisibility(View.VISIBLE);
         } else {

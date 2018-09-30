@@ -56,6 +56,10 @@
         android:textSize="14sp"
         android:gravity="center_vertical|end"
         android:layout_below="@+id/rlSearch"
+        android:paddingStart="10dp"
+        android:paddingLeft="10dp"
+        android:paddingEnd="10dp"
+        android:paddingRight="10dp"
         android:textColor="#515151"
         android:visibility="gone"/>
 

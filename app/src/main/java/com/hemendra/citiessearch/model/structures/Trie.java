@@ -112,6 +112,8 @@ public class Trie extends PrefixSearchStructure {
      */
     @Override
     public void destroy() {
+        instance.cities.clear();
+        instance.root = null;
         instance = null;
     }
 
